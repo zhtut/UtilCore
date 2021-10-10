@@ -9,6 +9,15 @@
           "revision": "ce3113e159b8c6d8565e5d8db2672b572c81aea9",
           "version": "4.0.2"
         }
+      },
+      {
+        "package": "SSNetwork",
+        "repositoryURL": "https://gitee.com/ztgtut/SSNetwork.git",
+        "state": {
+          "branch": null,
+          "revision": "f8cda3b880c8eba8943ccbeb18ac660e1f950aca",
+          "version": "1.0.0"
+        }
       }
     ]
   },

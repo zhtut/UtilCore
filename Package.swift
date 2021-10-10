@@ -17,7 +17,7 @@ let package = Package(name: "SSCommon",
                       ],
                       dependencies: [
                         .package(name: "COpenSSL", url: cOpenSSLRepo, from: "4.0.2"),
-                        .package(name: "SSNetwork", path: "../SSNetwork")
+                        .package(url: "https://gitee.com/ztgtut/SSNetwork.git", from: "1.0.0"),
                       ],
                       targets: [
                         .target(name: "SSCommon", path: "Sources/SSCommon"),
