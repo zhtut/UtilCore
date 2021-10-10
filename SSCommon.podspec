@@ -2,7 +2,7 @@
 Pod::Spec.new do |s| 
 
   s.name         = "SSCommon"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = " 常用工具库 "
 
   s.description  = <<-DESC
@@ -17,12 +17,12 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://gitee.com/ztgtut/SSCommon.git", :tag => "#{s.version}" }
 
-  s.source_files  = "SSCommon", "SSCommon/**/*.{h,m,swift}"
+  s.source_files  = "Sources/**/*.swift"
   s.module_name   = 'SSCommon'
   s.swift_version = "5.0"
 
-  s.ios.deployment_target = "12.0"
-  s.osx.deployment_target = '10.14'
+  s.ios.deployment_target = "9.0"
+  s.osx.deployment_target = '10.12'
 
   # ――― Project Linking ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
