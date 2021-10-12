@@ -4,9 +4,9 @@
 import PackageDescription
 
 #if os(Linux)
-let cOpenSSLRepo = "https://github.com/PerfectlySoft/Perfect-COpenSSL-Linux"
+let cOpenSSLRepo = "https://gitee.com/ztgtut/Perfect-COpenSSL-Linux"
 #else
-let cOpenSSLRepo = "https://github.com/PerfectlySoft/Perfect-COpenSSL"
+let cOpenSSLRepo = "https://gitee.com/ztgtut/Perfect-COpenSSL"
 #endif
 
 let package = Package(name: "SSCommon",

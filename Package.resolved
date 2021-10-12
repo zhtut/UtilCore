@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "COpenSSL",
-        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-COpenSSL",
+        "repositoryURL": "https://gitee.com/ztgtut/Perfect-COpenSSL",
         "state": {
           "branch": null,
           "revision": "ce3113e159b8c6d8565e5d8db2672b572c81aea9",
