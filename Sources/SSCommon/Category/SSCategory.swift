@@ -82,7 +82,6 @@ public extension Dictionary {
         return nil
     }
     
-    
     /// json转成对象
     /// - Returns: 返回转成的对象
     func transformToModel<T: Decodable>(_ type: T.Type) -> T? {
@@ -167,9 +166,19 @@ public extension String {
     var doubleValue: Double? {
         return Double(self)
     }
+    
+    var intValue: Int? {
+        return Int(self)
+    }
 }
 
 public extension Double {
+    var stringValue: String? {
+        return "\(self)"
+    }
+}
+
+public extension Int {
     var stringValue: String? {
         return "\(self)"
     }
