@@ -50,7 +50,7 @@ open class SSLogManager: NSObject {
         return path
     }
     
-    func log(_ message: String) {
+    open func log(_ message: String) {
         queue.async {
             let path = self.currentFilePath()
             var newText: String
