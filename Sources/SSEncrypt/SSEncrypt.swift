@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CryptoKit
+import Crypto
 
 public extension HashedAuthenticationCode {
     var data: Data? {
