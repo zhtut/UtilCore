@@ -7,6 +7,7 @@
 
 import Foundation
 import COpenSSL
+import Crypto
 
 public let HMAC_SHA256_LENGTH = 32
 public let HMAC_SHA512_LENGTH = 64
@@ -31,6 +32,10 @@ public extension String {
     }
     
     func hmacWith(key: String) -> Data {
+        let key = SymmetricKey(data: key.data(using: .utf8)!)
+        let someData = self.data(using: .utf8)!
+        let mac = HMAC<SHA256>.authenticationCode(for: someData, using: key)
+        
         if let ckey = key.data(using: .utf8),
            let cData = self.data(using: .utf8) {
             var digest = Data(repeating: 0, count: HMAC_SHA256_LENGTH)
