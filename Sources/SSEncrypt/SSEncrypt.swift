@@ -6,11 +6,23 @@
 //
 
 import Foundation
-import COpenSSL
-import Crypto
+import CryptoKit
 
-public let HMAC_SHA256_LENGTH = 32
-public let HMAC_SHA512_LENGTH = 64
+public extension HashedAuthenticationCode {
+    var data: Data? {
+        let wapper = self.withUnsafeBytes { pointer -> Data? in
+            if let unsafeRawPoint = pointer.baseAddress {
+                let data = Data(bytes: unsafeRawPoint, count: pointer.count)
+                return data
+            }
+            return nil
+        }
+        if let data = wapper {
+            return data
+        }
+        return nil
+    }
+}
 
 public extension Data {
     var bytes: [UInt8] {
@@ -18,99 +30,32 @@ public extension Data {
     }
 }
 
-public extension Array where Element == UInt8 {
-    var data: Data {
-        return Data(self)
-    }
-}
-
 public extension String {
-    func hmacToBase64StringWith(key: String) -> String {
-        let result = hmacWith(key: key)
+    
+    func hmacWith<H: HashFunction>(key: String, h: H.Type) -> Data {
+        let key = SymmetricKey(data: key.data(using: .utf8)!)
+        let someData = self.data(using: .utf8)!
+        let mac = HMAC<H>.authenticationCode(for: someData, using: key)
+        if let data = mac.data {
+            return data
+        }
+        return Data()
+    }
+    
+    func hmacSha256ToBase64With(key: String) -> String {
+        let result = hmacWith(key: key, h: SHA256.self)
         let base64String = result.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
         return base64String
     }
     
-    func hmacWith(key: String) -> Data {
-        let key = SymmetricKey(data: key.data(using: .utf8)!)
-        let someData = self.data(using: .utf8)!
-        let mac = HMAC<SHA256>.authenticationCode(for: someData, using: key)
-        
-        if let ckey = key.data(using: .utf8),
-           let cData = self.data(using: .utf8) {
-            var digest = Data(repeating: 0, count: HMAC_SHA256_LENGTH)
-            digest.withUnsafeMutableBytes { digestPtr in
-                cData.withUnsafeBytes { dataPtr in
-                    ckey.withUnsafeBytes { keyPtr in
-                        _ = HMAC(EVP_sha256(), keyPtr, Int32(key.count), dataPtr, cData.count, digestPtr, nil)
-                    }
-                }
-            }
-            return digest
-        }
-        return Data()
-    }
-    
-    func hmacWithSha512(key: String) -> Data {
-        if let ckey = key.data(using: .utf8),
-           let cData = self.data(using: .utf8) {
-            var digest = Data(repeating: 0, count: HMAC_SHA512_LENGTH)
-            digest.withUnsafeMutableBytes { digestPtr in
-                cData.withUnsafeBytes { dataPtr in
-                    ckey.withUnsafeBytes { keyPtr in
-                        _ = HMAC(EVP_sha512(), keyPtr, Int32(key.count), dataPtr, cData.count, digestPtr, nil)
-                    }
-                }
-            }
-            return digest
-        }
-        return Data()
-    }
-    
-    func hmacToSha256StringWith(key: String) -> String {
-        var result = hmacWith(key: key)
-        var str: String?
+    func hmacSha256With(key: String) -> String {
+        let result = hmacWith(key: key, h: SHA256.self)
+        let bytes = result.bytes
         let length = result.count
-        result.withUnsafeMutableBytes { bufferPointer in
-            str = stringFromResult(result: bufferPointer, length: length)
-        }
-        return str ?? ""
-    }
-    
-    func sha512() -> String {
-        if let data = self.data(using: .utf8) {
-            let bytes = data.bytes
-            var digest = Data(repeating: 0, count: HMAC_SHA512_LENGTH)
-            digest.withUnsafeMutableBytes { pointer in
-                SHA512(bytes, bytes.count, pointer)
-            }
-            var str: String?
-            let length = digest.count
-            digest.withUnsafeMutableBytes { bufferPointer in
-                str = stringFromResult(result: bufferPointer, length: length)
-            }
-            return str ?? ""
-        }
-        return ""
-    }
-    
-    func hmacToSha512StringWith(key: String) -> String {
-        var result = hmacWithSha512(key: key)
-        var str: String?
-        let length = result.count
-        result.withUnsafeMutableBytes { bufferPointer in
-            str = stringFromResult(result: bufferPointer, length: length)
-        }
-        return str ?? ""
-    }
-    
-    private func stringFromResult(result: UnsafeMutableRawPointer, length: Int) -> String {
         let hash = NSMutableString(capacity: length)
-        var pointer = result
-        for _ in 0..<length {
-            let x = pointer.load(as: UInt8.self)
+        for i in 0..<length {
+            let x = bytes[i]
             hash.append(String(format: "%02x", x))
-            pointer = pointer + 1
         }
         return "\(hash)".lowercased()
     }
