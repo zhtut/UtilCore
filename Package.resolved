@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "SSNetwork",
-        "repositoryURL": "https://gitee.com/ztgtut/SSNetwork.git",
+        "repositoryURL": "https://github.com/zhtut/SSNetwork.git",
         "state": {
           "branch": null,
-          "revision": "f8cda3b880c8eba8943ccbeb18ac660e1f950aca",
-          "version": "1.0.0"
+          "revision": "1632064d8246ce6020e0aa6e7aaf1c586a60c175",
+          "version": "1.0.1"
         }
       },
       {
