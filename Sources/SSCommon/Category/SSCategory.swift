@@ -202,26 +202,17 @@ public extension Int {
     }
 }
 
-public extension String {
+public extension Double {
     /// 取精度
     /// - Parameter count: 小数点后几位
     /// - Returns: 获取精度后的数据
     func precisionStringWith(count: Int) -> String {
-        let sz = self
-        let arr = sz.components(separatedBy: ".")
-        if arr.count != 2 {
-            return sz
-        }
-        if count == 0 {
-            return arr.first!
-        }
-        let first = arr.first
-        var last = arr.last
-        if last!.count > count {
-            last = "\(last!.prefix(count))"
-        }
-        let newStr = "\(first!).\(last!)"
-        return newStr
+        let format = NumberFormatter()
+        format.minimumFractionDigits = 0
+        format.maximumFractionDigits = count
+        format.roundingMode = .halfUp
+        let str = format.string(for: self)
+        return str ?? ""
     }
     
     /// 取精度
@@ -239,7 +230,9 @@ public extension String {
         let str = arr.last
         return precisionStringWith(count: str!.count)
     }
-    
+}
+
+public extension String {
     func urlEncodeString() -> String? {
         let characters = "!*'();:@&=+$,/?%#[]"
         let set = CharacterSet(charactersIn: characters).inverted
