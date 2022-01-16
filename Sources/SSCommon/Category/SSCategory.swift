@@ -10,6 +10,16 @@ import Foundation
 import UIKit
 #endif
 
+public extension Array {
+    var jsonStr: String? {
+        if let data = try? JSONSerialization.data(withJSONObject: self, options: .prettyPrinted) {
+            let str = String(data: data, encoding: .utf8)
+            return str
+        }
+        return nil
+    }
+}
+
 public extension Dictionary {
     var jsonStr: String? {
         if let data = try? JSONSerialization.data(withJSONObject: self, options: .prettyPrinted) {
