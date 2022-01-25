@@ -42,6 +42,15 @@ public extension String {
         return Data()
     }
     
+    func signatureWith<H: HashFunction>(h: H.Type) -> Data {
+        let someData = self.data(using: .utf8)!
+        let mac = signature(h: H.self)
+        if let data = mac.data {
+            return data
+        }
+        return Data()
+    }
+    
     func hmacSha256ToBase64With(key: String) -> String {
         let result = hmacWith(key: key, h: SHA256.self)
         let base64String = result.base64EncodedString(options: Data.Base64EncodingOptions(rawValue: 0))
@@ -50,6 +59,18 @@ public extension String {
     
     func hmacSha256With(key: String) -> String {
         let result = hmacWith(key: key, h: SHA256.self)
+        let bytes = result.bytes
+        let length = result.count
+        let hash = NSMutableString(capacity: length)
+        for i in 0..<length {
+            let x = bytes[i]
+            hash.append(String(format: "%02x", x))
+        }
+        return "\(hash)".lowercased()
+    }
+    
+    func hmacSha512With(key: String) -> String {
+        let result = hmacWith(key: key, h: SHA512.self)
         let bytes = result.bytes
         let length = result.count
         let hash = NSMutableString(capacity: length)
