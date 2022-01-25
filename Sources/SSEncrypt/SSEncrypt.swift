@@ -28,6 +28,18 @@ public extension Data {
     var bytes: [UInt8] {
         return [UInt8](self)
     }
+    
+    var hexString: String {
+        let result = self
+        let bytes = result.bytes
+        let length = result.count
+        let hash = NSMutableString(capacity: length)
+        for i in 0..<length {
+            let x = bytes[i]
+            hash.append(String(format: "%02x", x))
+        }
+        return "\(hash)".lowercased()
+    }
 }
 
 public extension String {
@@ -42,13 +54,17 @@ public extension String {
         return Data()
     }
     
-    func signatureWith<H: HashFunction>(h: H.Type) -> Data {
+    func signatureWith<H: HashFunction>(h: H.Type) -> String {
         let someData = self.data(using: .utf8)!
-        let mac = signature(h: H.self)
-        if let data = mac.data {
-            return data
-        }
-        return Data()
+        var hf = h.init()
+        hf.update(data: someData)
+        let result = hf.finalize()
+        let str = result.description.replacingOccurrences(of: "SHA512 digest: ", with: "")
+        return str
+    }
+    
+    func sha512Signature() -> String {
+        return self.signatureWith(h: SHA512.self)
     }
     
     func hmacSha256ToBase64With(key: String) -> String {
@@ -59,25 +75,11 @@ public extension String {
     
     func hmacSha256With(key: String) -> String {
         let result = hmacWith(key: key, h: SHA256.self)
-        let bytes = result.bytes
-        let length = result.count
-        let hash = NSMutableString(capacity: length)
-        for i in 0..<length {
-            let x = bytes[i]
-            hash.append(String(format: "%02x", x))
-        }
-        return "\(hash)".lowercased()
+        return result.hexString
     }
     
     func hmacSha512With(key: String) -> String {
         let result = hmacWith(key: key, h: SHA512.self)
-        let bytes = result.bytes
-        let length = result.count
-        let hash = NSMutableString(capacity: length)
-        for i in 0..<length {
-            let x = bytes[i]
-            hash.append(String(format: "%02x", x))
-        }
-        return "\(hash)".lowercased()
+        return result.hexString
     }
 }
