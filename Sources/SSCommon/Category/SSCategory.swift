@@ -10,6 +10,14 @@ import Foundation
 import UIKit
 #endif
 
+public func max<T: Comparable>(_ a: T, _ b: T) -> T {
+    return a > b ? a : b
+}
+
+public func min<T: Comparable>(_ a: T, _ b: T) -> T {
+    return a < b ? a : b
+}
+
 public extension Array {
     var jsonStr: String? {
         if let data = try? JSONSerialization.data(withJSONObject: self, options: .prettyPrinted) {
