@@ -26,4 +26,5 @@ let package = Package(name: "SSCommon",
                             "SSNetwork",
                             "SSCommon",
                         ], path: "Sources/SSLog"),
+                        .testTarget(name: "SSCommonTests", dependencies: ["SSCommon"])
                       ])
