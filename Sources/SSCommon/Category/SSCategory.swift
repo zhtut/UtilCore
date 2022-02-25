@@ -196,6 +196,10 @@ public extension String {
     var intValue: Int? {
         return Int(self)
     }
+    
+    var decimalValue: Decimal? {
+        return Decimal(string: self)
+    }
 }
 
 public extension Double {
