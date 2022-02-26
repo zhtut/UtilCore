@@ -247,6 +247,20 @@ public extension String {
         }
         return 0
     }
+    
+    func urlEncodeString() -> String? {
+        let characters = "!*'();:@&=+$,/?%#[]"
+        let set = CharacterSet(charactersIn: characters).inverted
+        let str = self.addingPercentEncoding(withAllowedCharacters: set)
+        return str
+    }
+}
+
+public extension Date {
+    static var timestamp: String {
+        let curr = Date().timeIntervalSince1970 * 1000.0
+        return String(format: "%.0f", curr)
+    }
 }
 
 public extension Double {
@@ -290,15 +304,6 @@ public extension Double {
     func precisionStringWith(precision: String) -> String {
         let count = precision.precision
         return precisionStringWith(count: count)
-    }
-}
-
-public extension String {
-    func urlEncodeString() -> String? {
-        let characters = "!*'();:@&=+$,/?%#[]"
-        let set = CharacterSet(charactersIn: characters).inverted
-        let str = self.addingPercentEncoding(withAllowedCharacters: set)
-        return str
     }
 }
 

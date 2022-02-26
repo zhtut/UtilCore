@@ -20,4 +20,10 @@ final class SSCommonTests: XCTestCase {
             print("no")
         }
     }
+    
+    func testTimestamp() {
+        let str = String.timestamp
+        print(str)
+        
+    }
 }
