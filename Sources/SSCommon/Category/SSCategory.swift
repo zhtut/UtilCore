@@ -18,6 +18,10 @@ public func min<T: Comparable>(_ a: T, _ b: T) -> T {
     return a < b ? a : b
 }
 
+public func dabs(_ a: Decimal) -> Decimal {
+    return a < 0 ? -a : a
+}
+
 public extension Array {
     var jsonStr: String? {
         if let data = try? JSONSerialization.data(withJSONObject: self, options: .prettyPrinted) {
@@ -25,6 +29,34 @@ public extension Array {
             return str
         }
         return nil
+    }
+}
+
+public extension Decimal {
+    var doubleValue: Double? {
+        return Double(exactly: self as NSNumber)
+    }
+    var stringValue: String {
+        return "\(self)"
+    }
+    /// 取精度
+    /// - Parameter count: 小数点后几位
+    /// - Returns: 获取精度后的数据
+    func precisionStringWith(count: Int) -> String {
+        let format = NumberFormatter()
+        format.minimumFractionDigits = 0
+        format.maximumFractionDigits = count
+        format.roundingMode = .halfUp
+        let str = format.string(for: self)
+        return str ?? ""
+    }
+    
+    /// 取精度
+    /// - Parameter precision: 精度字符串，如0.000001
+    /// - Returns: 获取精度后的数据
+    func precisionStringWith(precision: String) -> String {
+        let count = precision.precision
+        return precisionStringWith(count: count)
     }
 }
 
@@ -200,17 +232,42 @@ public extension String {
     var decimalValue: Decimal? {
         return Decimal(string: self)
     }
+    
+    var precision: Int {
+        var newPre = self
+        while newPre.hasSuffix("0") {
+            newPre = "\(newPre.prefix(newPre.count - 2))"
+        }
+        let arr = newPre.components(separatedBy: ".")
+        if arr.count == 1 {
+            return 0
+        }
+        if let str = arr.last {
+            return str.count
+        }
+        return 0
+    }
 }
 
 public extension Double {
     var stringValue: String? {
         return "\(self)"
     }
+    
+    var decimalValue: Decimal {
+        return Decimal(self)
+    }
 }
 
 public extension Int {
     var stringValue: String? {
         return "\(self)"
+    }
+    var doubleValue: Double {
+        return Double(self)
+    }
+    var decimalValue: Decimal {
+        return Decimal(self)
     }
 }
 
@@ -231,16 +288,8 @@ public extension Double {
     /// - Parameter precision: 精度字符串，如0.000001
     /// - Returns: 获取精度后的数据
     func precisionStringWith(precision: String) -> String {
-        var newPre = precision
-        while newPre.hasSuffix("0") {
-            newPre = "\(newPre.prefix(newPre.count - 2))"
-        }
-        let arr = newPre.components(separatedBy: ".")
-        if arr.count == 1 {
-            return precisionStringWith(count: 0)
-        }
-        let str = arr.last
-        return precisionStringWith(count: str!.count)
+        let count = precision.precision
+        return precisionStringWith(count: count)
     }
 }
 
