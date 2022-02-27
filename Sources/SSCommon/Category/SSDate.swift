@@ -38,17 +38,25 @@ public extension String {
     
     func dateWithFormat(_ format: String) -> Date? {
         let str = self
-        let formatter = DateFormatter(dateFormat: "yyyy-MM-dd HH:mm:ss")
+        let formatter = DateFormatter(dateFormat: format)
         let date = formatter.date(from: str)
         return date
     }
     
-    var normalDate: Date? {
-        return dateWithFormat(String.normalDateFormat)
+    static var commonDateFormat: String {
+        "yyyy-MM-dd HH:mm:ss"
     }
     
-    static var normalDateFormat: String {
+    var commonDate: Date? {
+        return dateWithFormat(String.commonDateFormat)
+    }
+    
+    static var descDateFormat: String {
         "yyyy年MM月dd日 HH时mm分ss秒"
+    }
+    
+    var descDate: Date? {
+        return dateWithFormat(String.descDateFormat)
     }
 }
 
@@ -87,7 +95,17 @@ public extension Date {
     }
     
     var dateDesc: String? {
-        return stringFromFormat(String.normalDateFormat)
+        return stringFromFormat(String.descDateFormat)
+    }
+    
+    static var timestamp: Int {
+        let curr = Date().timeIntervalSince1970 * 1000.0
+        return Int(curr)
+    }
+    
+    var timestamp: Int {
+        let curr = self.timeIntervalSince1970 * 1000.0
+        return Int(curr)
     }
 }
 

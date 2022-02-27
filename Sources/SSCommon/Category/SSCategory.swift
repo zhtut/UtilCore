@@ -256,13 +256,6 @@ public extension String {
     }
 }
 
-public extension Date {
-    static var timestamp: String {
-        let curr = Date().timeIntervalSince1970 * 1000.0
-        return String(format: "%.0f", curr)
-    }
-}
-
 public extension Double {
     var stringValue: String? {
         return "\(self)"
