@@ -7,7 +7,7 @@
 
 import Foundation
 
-public typealias SucceedHandler = (Bool, String?) -> Void
+public typealias SucceedHandler = (_ succ: Bool, _ errMsg: String?) -> Void
 
 /// 生成一个颜色，可以直接从蓝湖复制过来
 /// - Parameters:
