@@ -100,7 +100,8 @@ public extension Dictionary {
             if value is Int {
                 return value as? Int
             } else if value is String {
-                return Int(value as! String)
+                let str = value as! String
+                return str.intValue
             } else if value is Double {
                 return Int(value as! Double)
             }
@@ -226,7 +227,10 @@ public extension String {
     }
     
     var intValue: Int? {
-        return Int(self)
+        if let doubleValue = doubleValue {
+            return Int(doubleValue)
+        }
+        return nil
     }
     
     var decimalValue: Decimal? {
