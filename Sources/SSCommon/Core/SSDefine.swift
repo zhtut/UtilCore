@@ -22,3 +22,13 @@ public func rgba(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, _ a: CGFloat) -> UICo
     return UIColor(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: a)
 }
 #endif
+
+public struct CommonError: Error, CustomStringConvertible {
+    public var errMsg: String
+    public init(errMsg: String) {
+        self.errMsg = errMsg
+    }
+    public var description: String {
+        return "CommonError: \(errMsg)"
+    }
+}
