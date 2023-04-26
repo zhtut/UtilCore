@@ -7,6 +7,7 @@
 
 import Foundation
 
+#if os(MacOS) || os(Linux)
 public struct CommandError: Error, CustomStringConvertible {
     public var errMsg: String
     public var description: String {
@@ -136,3 +137,5 @@ public func runCommand(_ command: String,
     
     return (task.terminationStatus, output)
 }
+
+#endif

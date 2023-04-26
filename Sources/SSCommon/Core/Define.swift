@@ -5,10 +5,6 @@
 //  Created by shutut on 2021/8/21.
 //
 
-import Foundation
-
-public typealias SucceedHandler = (_ succ: Bool, _ errMsg: String?) -> Void
-
 /// 生成一个颜色，可以直接从蓝湖复制过来
 /// - Parameters:
 ///   - r: 红

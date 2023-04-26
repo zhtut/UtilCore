@@ -6,9 +6,6 @@
 //
 
 import Foundation
-#if os(iOS)
-import UIKit
-#endif
 
 public func max<T: Comparable>(_ a: T, _ b: T) -> T {
     return a > b ? a : b
@@ -61,6 +58,7 @@ public extension Decimal {
 }
 
 public extension Dictionary {
+
     var jsonStr: String? {
         if let data = try? JSONSerialization.data(withJSONObject: self, options: .prettyPrinted) {
             let str = String(data: data, encoding: .utf8)
@@ -70,127 +68,77 @@ public extension Dictionary {
     }
     
     func stringFor(_ key: String) -> String? {
-        let dic = self as! [String: Any]
-        if let value = dic[key] {
-            if value is String {
-                return value as? String
-            }
+        guard let dic = self as? [String: Any] else {
+            return nil
+        }
+        if let value = dic[key] as? String {
+            return value
+        } else if let value = dic[key] {
             return "\(value)"
         }
         return nil
     }
     
     func boolFor(_ key: String) -> Bool? {
-        let dic = self as! [String: Any]
-        if let value = dic[key] {
-            if value is Bool {
-                return value as? Bool
-            } else if value is String {
-                return Int(value as! String) ?? 0 > 0
-            } else if value is Int {
-                return Int(value as! Int) > 0
-            }
+        guard let dic = self as? [String: Any] else {
+            return nil
         }
-        return nil
+        if let value = dic[key] as? Bool {
+            return value
+        } else if let value = dic.intFor(key) {
+            return value != 0
+        } else if let value = dic.stringFor(key) {
+            return !value.isEmpty
+        } else if let value = dic.doubleFor(key) {
+            return value != 0
+        }
+        return false
     }
     
     func intFor(_ key: String) -> Int? {
-        let dic = self as! [String: Any]
-        if let value = dic[key] {
-            if value is Int {
-                return value as? Int
-            } else if value is String {
-                let str = value as! String
-                return str.intValue
-            } else if value is Double {
-                return Int(value as! Double)
-            }
+        guard let dic = self as? [String: Any] else {
+            return nil
+        }
+        if let value = dic[key] as? Int {
+            return value
+        } else if let value = dic[key] as? Double {
+            return Int(value)
+        } else if let value = dic[key] as? String {
+            return Int(value)
         }
         return nil
     }
     
     func doubleFor(_ key: String) -> Double? {
-        let dic = self as! [String: Any]
-        if let value = dic[key] {
-            if value is Double {
-                return value as? Double
-            } else if value is String {
-                return Double(value as! String)
-            } else if value is Int {
-                return Double(value as! Int)
-            }
+        guard let dic = self as? [String: Any] else {
+            return nil
+        }
+        if let value = dic[key] as? Double {
+            return value
+        } else if let value = dic[key] as? Int {
+            return Double(value)
+        } else if let value = dic[key] as? String {
+            return Double(value)
         }
         return nil
     }
     
     func arrayFor(_ key: String) -> [Any]? {
-        let dic = self as! [String: Any]
-        if let value = dic[key] {
-            if value is [Any] {
-                return value as? [Any]
-            }
+        guard let dic = self as? [String: Any] else {
+            return nil
+        }
+        if let value = dic[key] as? [Any] {
+            return value
         }
         return nil
     }
-    
-    /// json转成对象
-    /// - Returns: 返回转成的对象
-    func transformToModel<T: Decodable>(_ type: T.Type) -> T? {
-        let data: Data
-        
-        do {
-            data = try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
-        } catch {
-            print("\(self)转成Data失败：\(error)")
+
+    func dictionaryFor(_ key: String) -> [String: Any]? {
+        guard let dic = self as? [String: Any] else {
             return nil
         }
-        
-        do {
-            let decoder = JSONDecoder()
-            return try decoder.decode(type, from: data)
-        } catch {
-            print("\(self)转成\(type)失败：\(error)")
-        }
-        
-        return nil
-    }
-}
-
-public extension Encodable {
-    
-    /// 对象转成json字典
-    /// - Returns: 返回转成的json
-    func transformToJson() -> [String: Any]? {
-        let data: Data
-        do {
-            let encoder = JSONEncoder()
-            data = try encoder.encode(self)
-        } catch {
-            print("\(self)转成data失败：\(error)")
-            return nil
-        }
-        
-        do {
-            let json =  try JSONSerialization.jsonObject(with: data, options: [.mutableLeaves, .mutableContainers]) as? [String: Any]
-            return json
-        } catch {
-            print("data转成json失败：\(error)")
-        }
-        
-        return nil;
-    }
-}
-
-public extension Array where Element == [String: Any] {
-    func transformToModelArray<T: Decodable>(_ type: T.Type) -> [T]? {
-        var arr = [T]()
-        for dic in self {
-            if let model = dic.transformToModel(type) {
-                arr.append(model)
-            }
-        }
-        if arr.count > 0 {
-            return arr
+        if let value = dic[key] as? [String: Any] {
+            return value
         }
         return nil
     }
@@ -222,19 +170,28 @@ public extension String {
         return self
     }
     
-    var doubleValue: Double? {
+    var double: Double? {
         return Double(self)
     }
-    
-    var intValue: Int? {
-        if let doubleValue = doubleValue {
-            return Int(doubleValue)
-        }
-        return nil
+
+    func defaultDouble(_ `default`: Double = 0.0) -> Double {
+        return double ?? `default`
     }
     
-    var decimalValue: Decimal? {
+    var int: Int? {
+        return Int(self)
+    }
+
+    func defaultInt(_ `default`: Int = 0) -> Int {
+        return int ?? `default`
+    }
+    
+    var decimal: Decimal? {
         return Decimal(string: self)
+    }
+
+    func defaultDecimal(_ `default`: Decimal = 0.0) -> Decimal {
+        return decimal ?? `default`
     }
     
     var precision: Int {
@@ -261,23 +218,23 @@ public extension String {
 }
 
 public extension Double {
-    var stringValue: String? {
+    var string: String {
         return "\(self)"
     }
     
-    var decimalValue: Decimal {
+    var decimal: Decimal {
         return Decimal(self)
     }
 }
 
 public extension Int {
-    var stringValue: String? {
+    var string: String {
         return "\(self)"
     }
-    var doubleValue: Double {
+    var double: Double {
         return Double(self)
     }
-    var decimalValue: Decimal {
+    var decimal: Decimal {
         return Decimal(self)
     }
 }
@@ -303,151 +260,3 @@ public extension Double {
         return precisionStringWith(count: count)
     }
 }
-
-#if os(iOS)
-@objc public extension UIFont {
-    @objc class func PingFangSC_UltralightFont(ofSize size: CGFloat) -> UIFont {
-        var font = UIFont(name: "PingFangSC-Ultralight", size: size)
-        if font == nil {
-            font = UIFont.systemFont(ofSize: size)
-        }
-        return font!
-    }
-    @objc class func PingFangSC_SemiboldFont(ofSize size: CGFloat) -> UIFont {
-        var font = UIFont(name: "PingFangSC-Semibold", size: size)
-        if font == nil {
-            font = UIFont.systemFont(ofSize: size)
-        }
-        return font!
-    }
-    @objc class func PingFangSC_ThinFont(ofSize size: CGFloat) -> UIFont {
-        var font = UIFont(name: "PingFangSC-Thin", size: size)
-        if font == nil {
-            font = UIFont.systemFont(ofSize: size)
-        }
-        return font!
-    }
-    @objc class func PingFangSC_LightFont(ofSize size: CGFloat) -> UIFont {
-        var font = UIFont(name: "PingFangSC-Light", size: size)
-        if font == nil {
-            font = UIFont.systemFont(ofSize: size)
-        }
-        return font!
-    }
-    @objc class func PingFangSC_MediumFont(ofSize size: CGFloat) -> UIFont {
-        var font = UIFont(name: "PingFangSC-Medium", size: size)
-        if font == nil {
-            font = UIFont.systemFont(ofSize: size)
-        }
-        return font!
-    }
-    @objc class func PingFangSC_RegularFont(ofSize size: CGFloat) -> UIFont {
-        var font = UIFont(name: "PingFangSC-Regular", size: size)
-        if font == nil {
-            font = UIFont.systemFont(ofSize: size)
-        }
-        return font!
-    }
-}
-
-@objc public extension UIImage {
-    
-    /// 得到一个原始的图片，不经过渲染，用于button的image，或者bar的image这些地方，系统会自动重渲染这些图标，可以有效防止系统重渲染
-    /// - Returns: 返回原始的图片
-    @objc func originalImage() -> UIImage {
-        let im = self.withRenderingMode(.alwaysOriginal)
-        return im
-    }
-}
-
-@objc public extension UIView {
-    
-    var left: CGFloat {
-        set {
-            var fr = frame
-            fr.origin.x = newValue
-            frame = fr
-        }
-        get {
-            frame.origin.x
-        }
-    }
-    
-    var top: CGFloat {
-        set {
-            var fr = frame
-            fr.origin.y = newValue
-            frame = fr
-        }
-        get {
-            frame.origin.y
-        }
-    }
-    
-    var right: CGFloat {
-        set {
-            var fr = frame
-            fr.origin.x = newValue - fr.size.width
-            frame = fr
-        }
-        get {
-            frame.maxX
-        }
-    }
-    
-    var bottom: CGFloat {
-        set {
-            var fr = frame
-            fr.origin.y = newValue - fr.size.height
-            frame = fr
-        }
-        get {
-            frame.maxY
-        }
-    }
-    
-    var width: CGFloat {
-        set {
-            var fr = frame
-            fr.size.width = newValue
-            frame = fr
-        }
-        get {
-            frame.size.width
-        }
-    }
-    
-    var height: CGFloat {
-        set {
-            var fr = frame
-            fr.size.height = newValue
-            frame = fr
-        }
-        get {
-            frame.size.height
-        }
-    }
-    
-    var centerX: CGFloat {
-        set {
-            var cen = center
-            cen.x = newValue
-            center = cen
-        }
-        get {
-            center.x
-        }
-    }
-    
-    var centerY: CGFloat {
-        set {
-            var cen = center
-            cen.y = newValue
-            center = cen
-        }
-        get {
-            center.y
-        }
-    }
-}
-#endif
