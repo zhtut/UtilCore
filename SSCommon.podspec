@@ -28,4 +28,6 @@ Pod::Spec.new do |s|
   #  the lib prefix of their name.
   #
 
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'ENABLE_MODULE_VERIFIER' => 'YES' }
+
 end
