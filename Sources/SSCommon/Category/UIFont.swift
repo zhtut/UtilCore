@@ -10,6 +10,12 @@
 import UIKit
 
 @objc public extension UIFont {
+    func bold() -> UIFont {
+        return UIFont.boldSystemFont(ofSize: pointSize)
+    }
+}
+
+@objc public extension UIFont {
 
     /// 34.0 SFUI-Regular
     @available(iOS 11.0, *) @objc
