@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s| 
 
-  s.name         = "SSCommon"
+  s.name         = "UtilCore"
   s.version      = "1.0.1"
   s.summary      = " 工具库 "
 
@@ -9,13 +9,13 @@ Pod::Spec.new do |s|
    工具库 
                    DESC
 
-  s.homepage     = "https://github.com/zhtut/SSCommon.git"
+  s.homepage     = "https://github.com/zhtut/UtilCore.git"
 
   s.license        = { :type => 'MIT', :file => 'LICENSE' }
 
   s.author             = { "zhtg" => "zhtg@icloud.com" }
 
-  s.source       = { :git => "https://github.com/zhtut/SSCommon.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/zhtut/UtilCore.git", :tag => "#{s.version}" }
 
   s.source_files  = "Sources/**/*.swift"
 
