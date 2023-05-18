@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct MsgErr: Error, CustomStringConvertible {
+public struct MsgErr: Error, CustomStringConvertible, LocalizedError {
 
     public var msg: String
 
@@ -17,6 +17,10 @@ public struct MsgErr: Error, CustomStringConvertible {
     }
 
     public var description: String {
+        return msg
+    }
+
+    public var errorDescription: String {
         return msg
     }
 }
