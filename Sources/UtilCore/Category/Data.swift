@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Sequence where Element == UInt8 {
-    public var hex: String {
+    var hex: String {
         return reduce("") {$0 + String(format: "%02x", $1)}
     }
 }

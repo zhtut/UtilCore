@@ -14,7 +14,7 @@ public extension String {
     /// This creates a `Data` object from hex string. Note, if the string has any spaces or non-hex characters (e.g. starts with '<' and with a '>'), those are ignored and only hex characters are processed.
     ///
     /// - returns: Data represented by this hexadecimal string.
-    public var hexData: Data? {
+    var hexData: Data? {
         var data = Data(capacity: count / 2)
 
         let regex = try! NSRegularExpression(pattern: "[0-9a-f]{1,2}", options: .caseInsensitive)

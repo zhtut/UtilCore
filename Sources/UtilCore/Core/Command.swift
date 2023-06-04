@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if os(MacOS) || os(Linux)
+#if os(macOS) || os(Linux)
 public struct CommandError: Error, CustomStringConvertible {
     public var errMsg: String
     public var description: String {

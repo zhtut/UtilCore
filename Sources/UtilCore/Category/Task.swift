@@ -9,9 +9,9 @@ import Foundation
 
 public extension Task where Failure == Error {
     @discardableResult
-    public init(priority: TaskPriority? = nil,
-                operation: @escaping @Sendable () async throws -> Success,
-                catch: @escaping @Sendable (Error) -> Void) {
+    init(priority: TaskPriority? = nil,
+         operation: @escaping @Sendable () async throws -> Success,
+         catch: @escaping @Sendable (Error) -> Void) {
         self.init(priority: priority) {
             do {
                 return try await operation()
