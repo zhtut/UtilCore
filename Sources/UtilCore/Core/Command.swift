@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by zhtg on 2022/9/24.
 //
@@ -55,13 +55,13 @@ extension String {
     }
 }
 
-func findCommandPath(_ command: String) throws -> String {
+func findCommandPath(_ command: String) async throws -> String {
     let fm = FileManager.default
     if fm.fileExists(atPath: command) {
         return command
     }
+    
     let paths = [
-        "/Library/Frameworks/Python.framework/Versions/3.10/bin",
         "/usr/local/bin",
         "/usr/bin",
         "/bin",
@@ -82,18 +82,19 @@ func findCommandPath(_ command: String) throws -> String {
     throw MessageError(message: "command not found: \(command)")
 }
 
+/// 执行单个命令，如mkdir test, git pull等，只支持单个
 @discardableResult
 public func runCommand(_ command: String,
                        currentDir: String? = nil,
-                       args: [String] = []) async throws -> (Int32, String) {
+                       args: [String] = []) async throws -> String {
     let task = Process()
     let array = command.components(separatedBy: " ")
     
     // command
     guard let commandName = array.first else {
-        throw MessageError(message: "command not found:\(command)")
+        throw MessageError(message: "command not found: \(command)")
     }
-    let commandPath = try findCommandPath(commandName)
+    let commandPath = try await findCommandPath(commandName)
     let url = URL(fileURLWithPath: commandPath)
     task.executableURL = url
     
@@ -124,12 +125,16 @@ public func runCommand(_ command: String,
     let output = String(data: data, encoding: .utf8) ?? ""
     
     let argumentStr = arguments.joined(separator: " ")
-    let commandStr = commandName + " " + argumentStr
-    print("command:\(commandStr)\noutput:\(output)")
+    print("----command:\n\(commandPath) \(argumentStr)\n-----output:\(output)")
     
     task.waitUntilExit()
     
-    return (task.terminationStatus, output)
+    if task.terminationStatus == 0 {
+        // 删除两边的空格和换行
+        return output.trimmingCharacters(in: .newlines)
+    } else {
+        throw MessageError(message: "command not found: \(command)", code: Int(task.terminationStatus))
+    }
 }
 
 #endif

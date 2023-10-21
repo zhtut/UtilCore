@@ -12,9 +12,11 @@ import Foundation
 public struct MessageError: Error, CustomStringConvertible, LocalizedError {
 
     public var message: String
+    public var code: Int
     
-    public init(message: String) {
+    public init(message: String, code: Int = -1) {
         self.message = message
+        self.code = code
     }
 
     public var description: String {
