@@ -7,13 +7,13 @@
 
 import XCTest
 
-@testable import SSCommon
+@testable import UtilCore
 
 final class SSCommonTests: XCTestCase {
     
     func testNumber() {
         let str = "0.3351"
-        let number = str.doubleValue
+        let number = str.double
         if number == 0.3351 {
             print("yes")
         } else {

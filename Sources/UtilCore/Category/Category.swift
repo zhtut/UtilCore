@@ -30,10 +30,10 @@ public extension Array {
 }
 
 public extension Decimal {
-    var doubleValue: Double? {
+    var double: Double? {
         return Double(exactly: self as NSNumber)
     }
-    var stringValue: String {
+    var string: String {
         return "\(self)"
     }
     /// 取精度
@@ -59,7 +59,7 @@ public extension Decimal {
 
 public extension Dictionary {
 
-    var jsonStr: String? {
+    var jsonString: String? {
         if let data = try? JSONSerialization.data(withJSONObject: self, options: .prettyPrinted) {
             let str = String(data: data, encoding: .utf8)
             return str
@@ -154,16 +154,16 @@ public extension Array where Element: Equatable {
 
 public extension String {
   
-    func suffix(fromString: String) -> String {
-        if let startRange = range(of: fromString) {
+    func suffix(from: String) -> String {
+        if let startRange = range(of: from) {
             let str = suffix(from: startRange.upperBound)
             return "\(str)"
         }
         return self
     }
     
-    func prefix(toString: String) -> String {
-        if let endRange = self.range(of: toString) {
+    func prefix(to: String) -> String {
+        if let endRange = self.range(of: to) {
             let str = prefix(upTo: endRange.lowerBound)
             return "\(str)"
         }

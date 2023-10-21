@@ -8,19 +8,20 @@
 
 import Foundation
 
-public struct MsgErr: Error, CustomStringConvertible, LocalizedError {
+/// 通用错误
+public struct MessageError: Error, CustomStringConvertible, LocalizedError {
 
-    public var msg: String
-
-    public init(msg: String) {
-        self.msg = msg
+    public var message: String
+    
+    public init(message: String) {
+        self.message = message
     }
 
     public var description: String {
-        return msg
+        return message
     }
 
     public var errorDescription: String {
-        return msg
+        return message
     }
 }

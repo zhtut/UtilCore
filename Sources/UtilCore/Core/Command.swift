@@ -8,12 +8,6 @@
 import Foundation
 
 #if os(macOS) || os(Linux)
-public struct CommandError: Error, CustomStringConvertible {
-    public var errMsg: String
-    public var description: String {
-        return "CommandError: \(errMsg)"
-    }
-}
 
 extension ArraySlice where Element == String {
     func mergeArguments() -> [String] {
@@ -85,7 +79,7 @@ func findCommandPath(_ command: String) throws -> String {
             return full
         }
     }
-    throw CommandError(errMsg: "command not found: \(command)")
+    throw MessageError(message: "command not found: \(command)")
 }
 
 @discardableResult
@@ -97,7 +91,7 @@ public func runCommand(_ command: String,
     
     // command
     guard let commandName = array.first else {
-        throw CommandError(errMsg: "command not found:\(command)")
+        throw MessageError(message: "command not found:\(command)")
     }
     let commandPath = try findCommandPath(commandName)
     let url = URL(fileURLWithPath: commandPath)
