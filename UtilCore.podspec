@@ -2,7 +2,7 @@
 Pod::Spec.new do |s| 
 
   s.name         = "UtilCore"
-  s.version      = "1.0.1"
+  s.version      = "1.1.4"
   s.summary      = " 工具库 "
 
   s.description  = <<-DESC
