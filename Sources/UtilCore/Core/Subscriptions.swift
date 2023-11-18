@@ -15,6 +15,25 @@ import Combine
 private var NSObjectSubscribersSetKey = 0
 private var NSObjectSubscriptionKey = 0
 
+public extension AnyPublisher where Failure == Never {
+    func onceSink(receiveValue: @escaping (Output) -> Void) {
+        var subcription: AnyCancellable?
+        subcription = sink(receiveValue: { out in
+            receiveValue(out)
+            if let subcription {
+                SharedSubcriptions.shared.subscriptionSet.remove(subcription)
+            }
+        })
+        subcription?
+        .store(in: &SharedSubcriptions.shared.subscriptionSet)
+    }
+    
+}
+
+class SharedSubcriptions: NSObject {
+    static let shared = SharedSubcriptions()
+}
+
 @available(iOS 13.0, *)
 public extension NSObject {
     
