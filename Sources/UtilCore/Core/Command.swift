@@ -79,7 +79,7 @@ func findCommandPath(_ command: String) async throws -> String {
             return full
         }
     }
-    throw MessageError(message: "command not found: \(command)")
+    throw CommonError(message: "command not found: \(command)")
 }
 
 /// 执行单个命令，如mkdir test, git pull等，只支持单个
@@ -92,7 +92,7 @@ public func runCommand(_ command: String,
     
     // command
     guard let commandName = array.first else {
-        throw MessageError(message: "command not found: \(command)")
+        throw CommonError(message: "command not found: \(command)")
     }
     let commandPath = try await findCommandPath(commandName)
     let url = URL(fileURLWithPath: commandPath)
@@ -133,7 +133,7 @@ public func runCommand(_ command: String,
         // 删除两边的空格和换行
         return output.trimmingCharacters(in: .newlines)
     } else {
-        throw MessageError(message: "command not found: \(command)", code: Int(task.terminationStatus))
+        throw CommonError(code: Int(task.terminationStatus), message: "command not found: \(command)")
     }
 }
 

@@ -62,7 +62,7 @@ public extension String {
 
 public extension Date {
     
-    func stringFromFormat(_ format: String) -> String? {
+    func stringFromFormat(_ format: String) -> String {
         let date = self
         let formatter = DateFormatter(dateFormat: "yyyy-MM-dd HH:mm:ss")
         let str = formatter.string(from: date)
@@ -94,7 +94,7 @@ public extension Date {
         return timeString
     }
     
-    var dateDesc: String? {
+    var dateDesc: String {
         return stringFromFormat(String.descDateFormat)
     }
     
@@ -111,4 +111,25 @@ public extension Date {
 
 public func currentDateDesc() -> String {
     return Date().dateDesc ?? "日期"
+}
+
+public extension Double {
+    /// 把一个时间戳转为时间字符串
+    var dateDesc: String {
+        var time = self
+        let nowTime = Date().timeIntervalSince1970
+        if time > nowTime * 100 {
+            time = time / 1000
+        }
+        let date = Date(timeIntervalSince1970: time)
+        return date.dateDesc
+    }
+}
+
+public extension Int {
+    /// 把一个时间戳转为时间字符串
+    var dateDesc: String {
+        var time = self.double
+        return time.dateDesc
+    }
 }

@@ -9,12 +9,12 @@
 import Foundation
 
 /// 通用错误
-public struct MessageError: Error, CustomStringConvertible, LocalizedError {
+public struct CommonError: Error, CustomStringConvertible, LocalizedError {
 
-    public var message: String
     public var code: Int
+    public var message: String
     
-    public init(message: String, code: Int = -1) {
+    public init(code: Int = -1, message: String) {
         self.message = message
         self.code = code
     }
