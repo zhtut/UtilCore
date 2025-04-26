@@ -144,6 +144,98 @@ public extension Dictionary {
     }
 }
 
+public extension [Any] {
+    
+    var jsonString: String? {
+        if let data = try? JSONSerialization.data(withJSONObject: self, options: .prettyPrinted) {
+            let str = String(data: data, encoding: .utf8)
+            return str
+        }
+        return nil
+    }
+    
+    func string(at index: Int) -> String? {
+        guard count > index else {
+            return nil
+        }
+        
+        if let value = self[index] as? String {
+            return value
+        }
+        
+        let value = self[index]
+        return "\(value)"
+    }
+    
+    func bool(at index: Int) -> Bool? {
+        guard count > index else {
+            return nil
+        }
+        if let value = self[index] as? Bool {
+            return value
+        } else if let value = string(at: index) {
+            return value.isNotEmpty
+        } else if let value = int(at: index) {
+            return value != 0
+        } else if let value = double(at: index) {
+            return value != 0
+        }
+        return false
+    }
+    
+    func int(at index: Int) -> Int? {
+        guard count > index else {
+            return nil
+        }
+        if let value = self[index] as? Int {
+            return value
+        } else if let value = double(at: index) {
+            return Int(value)
+        } else if let value = string(at: index) {
+            return Int(value)
+        } else if let value = bool(at: index) {
+            return value ? 1 : 0
+        }
+        return nil
+    }
+    
+    func double(at index: Int) -> Double? {
+        guard count > index else {
+            return nil
+        }
+        if let value = self[index] as? Double {
+            return value
+        } else if let value = int(at: index) {
+            return Double(value)
+        } else if let value = string(at: index) {
+            return Double(value)
+        } else if let value = bool(at: index) {
+            return value ? 1.0 : 0
+        }
+        return nil
+    }
+    
+    func array(at index: Int) -> [Any]? {
+        guard count > index else {
+            return nil
+        }
+        if let value = self[index] as? [Any] {
+            return value
+        }
+        return nil
+    }
+    
+    func dictionary(at index: Int) -> [String: Any]? {
+        guard count > index else {
+            return nil
+        }
+        if let value = self[index] as? [String: Any] {
+            return value
+        }
+        return nil
+    }
+}
+
 public extension Array where Element: Equatable {
     mutating func remove(_ element: Element) {
         if let index = firstIndex(of: element) {
@@ -152,7 +244,22 @@ public extension Array where Element: Equatable {
     }
 }
 
+public extension Optional {
+    
+    var isEmpty: Bool {
+        return self == nil
+    }
+    
+    var isNotEmpty: Bool {
+        return self != nil
+    }
+}
+
 public extension String {
+    
+    var isNotEmpty: Bool {
+        return !isEmpty
+    }
   
     func suffix(from: String) -> String {
         if let startRange = range(of: from) {
