@@ -171,13 +171,14 @@ public extension [Any] {
         guard count > index else {
             return nil
         }
-        if let value = self[index] as? Bool {
+        let value = self[index]
+        if let value = value as? Bool {
             return value
-        } else if let value = string(at: index) {
+        } else if let value = value as? String {
             return value.isNotEmpty
-        } else if let value = int(at: index) {
+        } else if let value = value as? Int {
             return value != 0
-        } else if let value = double(at: index) {
+        } else if let value = value as? Double {
             return value != 0
         }
         return false
@@ -187,13 +188,14 @@ public extension [Any] {
         guard count > index else {
             return nil
         }
-        if let value = self[index] as? Int {
+        let value = self[index]
+        if let value = value as? Int {
             return value
-        } else if let value = double(at: index) {
+        } else if let value = value as? Double {
             return Int(value)
-        } else if let value = string(at: index) {
+        } else if let value = value as? String {
             return Int(value)
-        } else if let value = bool(at: index) {
+        } else if let value = value as? Bool {
             return value ? 1 : 0
         }
         return nil
@@ -203,13 +205,14 @@ public extension [Any] {
         guard count > index else {
             return nil
         }
-        if let value = self[index] as? Double {
+        let value = self[index]
+        if let value = value as? Double {
             return value
-        } else if let value = int(at: index) {
+        } else if let value = value as? Int {
             return Double(value)
-        } else if let value = string(at: index) {
+        } else if let value = value as? String {
             return Double(value)
-        } else if let value = bool(at: index) {
+        } else if let value = value as? Bool {
             return value ? 1.0 : 0
         }
         return nil
@@ -219,7 +222,8 @@ public extension [Any] {
         guard count > index else {
             return nil
         }
-        if let value = self[index] as? [Any] {
+        let value = self[index]
+        if let value = value as? [Any] {
             return value
         }
         return nil
@@ -229,7 +233,8 @@ public extension [Any] {
         guard count > index else {
             return nil
         }
-        if let value = self[index] as? [String: Any] {
+        let value = self[index]
+        if let value = value as? [String: Any] {
             return value
         }
         return nil
