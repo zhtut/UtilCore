@@ -57,7 +57,7 @@ public extension Decimal {
     }
 }
 
-public extension Dictionary {
+public extension [String: Any] {
 
     var jsonString: String? {
         if let data = try? JSONSerialization.data(withJSONObject: self, options: .prettyPrinted) {
@@ -68,79 +68,45 @@ public extension Dictionary {
     }
     
     func stringFor(_ key: String) -> String? {
-        guard let dic = self as? [String: Any] else {
+        guard let value = self[key] else {
             return nil
         }
-        if let value = dic[key] as? String {
-            return value
-        } else if let value = dic[key] {
-            return "\(value)"
-        }
-        return nil
+        return UtilCore.string(from: value)
     }
     
     func boolFor(_ key: String) -> Bool? {
-        guard let dic = self as? [String: Any] else {
+        guard let value = self[key] else {
             return nil
         }
-        if let value = dic[key] as? Bool {
-            return value
-        } else if let value = dic.intFor(key) {
-            return value != 0
-        } else if let value = dic.stringFor(key) {
-            return !value.isEmpty
-        } else if let value = dic.doubleFor(key) {
-            return value != 0
-        }
-        return false
+        return UtilCore.bool(from: value)
     }
     
     func intFor(_ key: String) -> Int? {
-        guard let dic = self as? [String: Any] else {
+        guard let value = self[key] else {
             return nil
         }
-        if let value = dic[key] as? Int {
-            return value
-        } else if let value = dic[key] as? Double {
-            return Int(value)
-        } else if let value = dic[key] as? String {
-            return Int(value)
-        }
-        return nil
+        return UtilCore.int(from: value)
     }
     
     func doubleFor(_ key: String) -> Double? {
-        guard let dic = self as? [String: Any] else {
+        guard let value = self[key] else {
             return nil
         }
-        if let value = dic[key] as? Double {
-            return value
-        } else if let value = dic[key] as? Int {
-            return Double(value)
-        } else if let value = dic[key] as? String {
-            return Double(value)
-        }
-        return nil
+        return UtilCore.double(from: value)
     }
     
     func arrayFor(_ key: String) -> [Any]? {
-        guard let dic = self as? [String: Any] else {
+        guard let value = self[key] else {
             return nil
         }
-        if let value = dic[key] as? [Any] {
-            return value
-        }
-        return nil
+        return UtilCore.array(from: value)
     }
 
     func dictionaryFor(_ key: String) -> [String: Any]? {
-        guard let dic = self as? [String: Any] else {
+        guard let value = self[key] else {
             return nil
         }
-        if let value = dic[key] as? [String: Any] {
-            return value
-        }
-        return nil
+        return UtilCore.dictionary(from: value)
     }
 }
 
@@ -158,13 +124,8 @@ public extension [Any] {
         guard count > index else {
             return nil
         }
-        
-        if let value = self[index] as? String {
-            return value
-        }
-        
         let value = self[index]
-        return "\(value)"
+        return UtilCore.string(from: value)
     }
     
     func bool(at index: Int) -> Bool? {
@@ -172,16 +133,7 @@ public extension [Any] {
             return nil
         }
         let value = self[index]
-        if let value = value as? Bool {
-            return value
-        } else if let value = value as? String {
-            return value.isNotEmpty
-        } else if let value = value as? Int {
-            return value != 0
-        } else if let value = value as? Double {
-            return value != 0
-        }
-        return false
+        return UtilCore.bool(from: value)
     }
     
     func int(at index: Int) -> Int? {
@@ -189,16 +141,7 @@ public extension [Any] {
             return nil
         }
         let value = self[index]
-        if let value = value as? Int {
-            return value
-        } else if let value = value as? Double {
-            return Int(value)
-        } else if let value = value as? String {
-            return Int(value)
-        } else if let value = value as? Bool {
-            return value ? 1 : 0
-        }
-        return nil
+        return UtilCore.int(from: value)
     }
     
     func double(at index: Int) -> Double? {
@@ -206,16 +149,7 @@ public extension [Any] {
             return nil
         }
         let value = self[index]
-        if let value = value as? Double {
-            return value
-        } else if let value = value as? Int {
-            return Double(value)
-        } else if let value = value as? String {
-            return Double(value)
-        } else if let value = value as? Bool {
-            return value ? 1.0 : 0
-        }
-        return nil
+        return UtilCore.double(from: value)
     }
     
     func array(at index: Int) -> [Any]? {
@@ -223,10 +157,7 @@ public extension [Any] {
             return nil
         }
         let value = self[index]
-        if let value = value as? [Any] {
-            return value
-        }
-        return nil
+        return UtilCore.array(from: value)
     }
     
     func dictionary(at index: Int) -> [String: Any]? {
@@ -234,11 +165,75 @@ public extension [Any] {
             return nil
         }
         let value = self[index]
-        if let value = value as? [String: Any] {
-            return value
-        }
-        return nil
+        return UtilCore.dictionary(from: value)
     }
+}
+
+public func string(from value: Any) -> String? {
+    if let value = value as? String {
+        return value
+    } else if let value = value as? Bool {
+        return "\(value)"
+    } else if let value = value as? Int {
+        return "\(value)"
+    } else if let value = value as? Double {
+        return "\(value)"
+    }
+    
+    return nil
+}
+
+public func bool(from value: Any) -> Bool? {
+    if let value = value as? Bool {
+        return value
+    } else if let value = value as? String {
+        return value.isNotEmpty
+    } else if let value = value as? Int {
+        return value != 0
+    } else if let value = value as? Double {
+        return value != 0
+    }
+    return false
+}
+
+public func double(from value: Any) -> Double? {
+    if let value = value as? Double {
+        return value
+    } else if let value = value as? Int {
+        return Double(value)
+    } else if let value = value as? String {
+        return Double(value)
+    } else if let value = value as? Bool {
+        return value ? 1.0 : 0
+    }
+    return nil
+}
+
+public func int(from value: Any) -> Int? {
+    if let value = value as? Int {
+        return value
+    } else if let value = value as? Double {
+        return Int(value)
+    } else if let value = value as? String {
+        return Int(value)
+    } else if let value = value as? Bool {
+        return value ? 1 : 0
+    }
+    return nil
+}
+
+public func array(from value: Any) -> [Any] {
+    if let value = value as? [Any] {
+        return value
+    }
+    return nil
+}
+
+public func dictionary(from value: Any) -> [String: Any]? {
+    if let value = value as? [String: Any] {
+        return value
+    }
+    return nil
 }
 
 public extension Array where Element: Equatable {
