@@ -29,5 +29,9 @@ public extension String {
 
         return data
     }
-
+    
+    func split(_ separator: Character) -> [String] {
+        split(separator: separator)
+            .map({ "\($0)" })
+    }
 }

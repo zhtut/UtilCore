@@ -222,7 +222,7 @@ public func int(from value: Any) -> Int? {
     return nil
 }
 
-public func array(from value: Any) -> [Any] {
+public func array(from value: Any) -> [Any]? {
     if let value = value as? [Any] {
         return value
     }
